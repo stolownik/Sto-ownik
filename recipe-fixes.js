@@ -1,7 +1,16 @@
 // Stołownik — własne zakresy filtrów + poprawki zdjęć
 (function(){
 const COST={1:12,2:15,3:22,4:31,5:30,6:19,7:29,8:18,9:29,10:23,11:28,12:14,13:31,14:43,15:29,16:19,17:27,18:16,19:22,20:42,21:12,22:17,23:13,24:28,25:38};
-const FIXIMG={13:'https://upload.wikimedia.org/wikipedia/commons/2/24/Golabki_jacek.jpg',16:'https://upload.wikimedia.org/wikipedia/commons/2/28/Polish_%22Zapiekanka%22.jpg'};
+// Zdjęcia poniżej są przypisane do konkretnych potraw, a nie używane jako ogólny fallback.
+const FIXIMG={
+13:'https://upload.wikimedia.org/wikipedia/commons/2/24/Golabki_jacek.jpg',
+16:'https://upload.wikimedia.org/wikipedia/commons/2/28/Polish_%22Zapiekanka%22.jpg',
+32:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fasolka%20po%20breto%C5%84sku.jpg?width=1200',
+33:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Bigos%20-%2023.01.2026.jpg?width=1200',
+34:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Kopytka%20at%20Restauracja%20Miodova%2C%20Krak%C3%B3w%2C%20Poland%2C%202019.jpg?width=1200',
+44:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Quesadillas.jpg?width=1200',
+46:'https://commons.wikimedia.org/wiki/Special:Redirect/file/ChiliSinCarne.jpg?width=1200'
+};
 let state={};
 function num(id,fallback){let e=document.getElementById(id),v=e&&e.value.trim();return v===''?fallback:+v}
 function apply(){if(typeof R==='undefined'||typeof draw!=='function'||typeof filt!=='function')return setTimeout(apply,50);Object.entries(FIXIMG).forEach(([id,url])=>{let r=R.find(x=>x.id===+id);if(r)r.img=url});
