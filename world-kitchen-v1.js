@@ -1,4 +1,4 @@
-// Stołownik — kuchnia świata: spójne teksty i metadane v3
+// Stołownik — kuchnia świata: spójne teksty, metadane i mocna marka v4
 (function(){
   function setText(selector,text){const el=document.querySelector(selector);if(el)el.textContent=text}
   function clean(){
@@ -15,6 +15,14 @@
     setText('.top','Odkrywaj. Gotuj. Smakuj.');
     setText('.brand','Kuchnia bez granic');
     setText('.lead','Sprawdzone smaki z różnych stron świata, podane prosto i apetycznie.');
+
+    const heroCopy=document.querySelector('#hubHome .heroCopy');
+    if(heroCopy&&!heroCopy.querySelector('.mainSiteName')){
+      const name=document.createElement('div');name.className='mainSiteName';name.textContent='Stołownik';heroCopy.prepend(name);
+    }
+    if(!document.getElementById('mainSiteNameStyle')){
+      const s=document.createElement('style');s.id='mainSiteNameStyle';s.textContent='.mainSiteName{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(76px,9vw,138px);font-weight:700;line-height:.72;letter-spacing:-.065em;color:#fff4df;margin:0 0 34px;text-shadow:0 12px 34px #160c0838}.mainSiteName:after{content:"";display:block;width:92px;height:3px;margin-top:25px;background:#bd774f;border-radius:99px}@media(max-width:760px){.mainSiteName{font-size:clamp(68px,18vw,96px);margin-bottom:30px}}';document.head.appendChild(s);
+    }
 
     setText('#hubHome .welcome small','WITAJ PRZY STOLE');
     setText('#hubHome .welcome h2','Smaki, do których chce się wracać.');
