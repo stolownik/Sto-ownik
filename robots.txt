@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://wojtexxwx-create.github.io/Sto-ownik/sitemap.xml
+Sitemap: https://stolownik.github.io/Sto-ownik/sitemap.xml
