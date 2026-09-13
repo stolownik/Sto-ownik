@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Connect site modules
+      - name: Build published index
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -32,13 +32,22 @@ jobs:
           names=['recipe-fixes.js','advisor.js','advisor-pro.js','advisor-fitness-v4.js','advisor-gym-pro-v5.js','advisor-hub-v6.js','recipes-26-50.js','recipes-live-fix.js','recipes-render-fix-v5.js','recipe-ux-v7.js','recipe-extras-v8.js','drinks-v1.js','style-pro-v1.js','fridge-v1.js','site-hub-v3.js','controls-v4.js','autumn-decor-v5.js','cleanup-old-menu-v1.js','world-kitchen-v1.js']
           for name in names:
               s=re.sub(r'<script src="'+re.escape(name)+r'(?:\?v=[^"]*)?"></script>', '', s)
-          s=s.replace('</body>','<script src="recipes-26-50.js?v=7"></script><script src="recipe-fixes.js?v=9"></script><script src="recipes-render-fix-v5.js?v=7"></script><script src="recipe-ux-v7.js?v=2"></script><script src="recipe-extras-v8.js?v=2"></script><script src="drinks-v1.js?v=6"></script><script src="style-pro-v1.js?v=4"></script><script src="controls-v4.js?v=2"></script><script src="site-hub-v3.js?v=7"></script><script src="autumn-decor-v5.js?v=2"></script><script src="cleanup-old-menu-v1.js?v=2"></script><script src="world-kitchen-v1.js?v=3"></script></body>')
+          s=re.sub(r'<style id="directRestaurantV1">.*?</style>','',s,flags=re.S)
+          direct='''<style id="directRestaurantV1">
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+          :root{--cream:#f3e7d5;--ink:#2c201a;--muted:#786253;--red:#8b4028;--green:#304936;--line:#d6b995}
+          html{background:#241914}body{font-family:Manrope,system-ui,sans-serif;background:radial-gradient(circle at 10% 0,#fff8ed 0,transparent 27%),linear-gradient(180deg,#f6ecde,#e9d5bc);font-size:16px;color:#2c201a}h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif}.top{background:#211713;color:#dfc3a4;padding:11px 18px;font-size:11px;font-weight:800;letter-spacing:.17em;text-transform:uppercase}body>header{padding:72px 24px 92px;background:radial-gradient(circle at 82% 20%,#b56c4035,transparent 30%),linear-gradient(120deg,#211713,#3b2920 55%,#68422e);border:0;color:#fff}.hero{max-width:1200px;gap:64px}.brand{background:#9a5132;color:#fff1df;border:1px solid #c98c66;padding:9px 15px;letter-spacing:.12em;text-transform:uppercase;font-size:11px}body>header h1{font-size:clamp(68px,9vw,112px);line-height:.84;color:#fff0d8;letter-spacing:-.055em;margin:22px 0}.lead{font-size:20px;line-height:1.7;color:#e6d1bb}.stat{background:#fff8ec10;border-color:#b98c6c;color:#ead6c1}.stat b{color:#e0a87d}.hero-art{gap:14px}.hero-art img{height:220px;border-radius:12px;border:5px solid #e8cfaf;box-shadow:0 22px 50px #130b074d}.searchbox{max-width:1100px;margin:-38px auto 34px;border-radius:16px;padding:12px;border:1px solid #d2b28e;background:#fffaf2;box-shadow:0 22px 55px #3e271a26}.search input{min-height:58px;border-radius:10px;font-size:16px}.surprise,.open,.daybtn{border-radius:9px;background:linear-gradient(#91482e,#76331f);padding:14px 19px;box-shadow:0 8px 18px #57271925}.daybox{max-width:1100px;margin:0 auto 48px;border-radius:16px;padding:30px 34px;background:linear-gradient(120deg,#293e30,#405d45);box-shadow:0 18px 38px #23332620}.daybox h2{font-size:36px;margin:0 0 5px;color:#fff1df}.section-head,.cats,.count,.grid{max-width:1100px;margin-left:auto;margin-right:auto}.section-head{margin-top:54px;margin-bottom:22px}.section-head h2{font-size:52px;line-height:1;color:#34241d}.section-head p{font-size:16px;color:#786253}.cats{gap:9px}.cat{padding:11px 16px;border-radius:999px;background:#fff9ef;border-color:#d6b995;font-weight:700}.cat.active{background:#813c27}.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.card{border-radius:15px;border-color:#d6b995;background:#fffaf2;box-shadow:0 10px 30px #50331f12;transition:.22s}.card:hover{transform:translateY(-6px);box-shadow:0 22px 42px #50331f24}.card img{height:255px}.pad{padding:21px}.card h3{font-size:29px;line-height:1.05}.card p{font-size:14px;line-height:1.65}.tag{background:#ecdbc4}.timebadge{border:1px solid #ead4b8}.sheet{border-radius:17px;background:#fffaf1}.sheet>img{height:410px}.inside{padding:36px}.inside h2{font-size:50px}.recipebar{background:#efdfca;border-radius:10px}.nut{background:#e2e9df;border-radius:9px}.stepmin{background:#304936}.cols{gap:38px}footer{background:#211713;border-top:4px solid #813c27;padding:45px 20px;color:#e5cfb7}
+          @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);padding-left:18px;padding-right:18px}.section-head,.cats,.count{margin-left:18px;margin-right:18px}.hero{grid-template-columns:1fr}.hero-art{max-width:650px}.daybox{margin-left:18px;margin-right:18px}}
+          @media(max-width:620px){body>header{padding:54px 18px 72px}.hero-art{display:none}body>header h1{font-size:64px}.grid{grid-template-columns:1fr}.section-head h2{font-size:43px}.searchbox{margin-left:12px;margin-right:12px}.daybox{padding:24px 20px}.sheet>img{height:270px}.inside{padding:22px}}
+          </style>'''
+          s=s.replace('</head>',direct+'</head>')
+          s=s.replace('</body>','<script src="recipes-26-50.js?v=8"></script><script src="recipe-fixes.js?v=10"></script><script src="recipes-render-fix-v5.js?v=8"></script><script src="recipe-ux-v7.js?v=3"></script><script src="recipe-extras-v8.js?v=3"></script><script src="drinks-v1.js?v=7"></script><script src="style-pro-v1.js?v=5"></script><script src="controls-v4.js?v=3"></script><script src="site-hub-v3.js?v=8"></script><script src="autumn-decor-v5.js?v=3"></script><script src="cleanup-old-menu-v1.js?v=3"></script><script src="world-kitchen-v1.js?v=4"></script></body>')
           p.write_text(s)
           PY
-      - name: Commit
+      - name: Commit published index
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git diff --cached --quiet || git commit -m 'Włącz restauracyjny układ Stołownika v7'
+          git diff --cached --quiet || git commit -m 'Publikuj restauracyjny wygląd bezpośrednio w index.html'
           git push
