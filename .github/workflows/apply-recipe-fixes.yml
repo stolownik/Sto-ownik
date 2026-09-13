@@ -5,6 +5,7 @@ on:
       - 'recipe-fixes.js'
       - 'advisor-pro.js'
       - 'recipes-26-50.js'
+      - 'recipes-live-fix.js'
       - '.github/workflows/apply-recipe-fixes.yml'
 permissions:
   contents: write
@@ -20,10 +21,9 @@ jobs:
           import re
           p=Path('index.html')
           s=p.read_text()
-          s=re.sub(r'<script src="recipe-fixes\.js(?:\?v=[^"]*)?"></script>', '', s)
-          s=re.sub(r'<script src="advisor(?:-pro)?\.js(?:\?v=[^"]*)?"></script>', '', s)
-          s=re.sub(r'<script src="recipes-26-50\.js(?:\?v=[^"]*)?"></script>', '', s)
-          s=s.replace('</body>','<script src="recipes-26-50.js?v=2"></script><script src="recipe-fixes.js?v=8"></script><script src="advisor-pro.js?v=3"></script></body>')
+          for name in ['recipe-fixes.js','advisor.js','advisor-pro.js','recipes-26-50.js','recipes-live-fix.js']:
+              s=re.sub(r'<script src="'+re.escape(name)+r'(?:\?v=[^"]*)?"></script>', '', s)
+          s=s.replace('</body>','<script src="recipes-26-50.js?v=4"></script><script src="recipe-fixes.js?v=8"></script><script src="recipes-live-fix.js?v=4"></script><script src="advisor-pro.js?v=3"></script></body>')
           p.write_text(s)
           PY
       - name: Commit
@@ -31,5 +31,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git diff --cached --quiet || git commit -m 'Napraw licznik 50 i odśwież nowe przepisy'
+          git diff --cached --quiet || git commit -m 'Włącz poprawne 50 przepisów'
           git push
