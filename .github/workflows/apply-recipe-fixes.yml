@@ -10,6 +10,8 @@ on:
       - 'drinks-v1.js'
       - 'style-pro-v1.js'
       - 'fridge-v1.js'
+      - 'site-hub-v3.js'
+      - 'controls-v4.js'
       - '.github/workflows/apply-recipe-fixes.yml'
 permissions:
   contents: write
@@ -25,10 +27,10 @@ jobs:
           import re
           p=Path('index.html')
           s=p.read_text()
-          names=['recipe-fixes.js','advisor.js','advisor-pro.js','advisor-fitness-v4.js','advisor-gym-pro-v5.js','advisor-hub-v6.js','recipes-26-50.js','recipes-live-fix.js','recipes-render-fix-v5.js','recipe-ux-v7.js','recipe-extras-v8.js','drinks-v1.js','style-pro-v1.js','fridge-v1.js']
+          names=['recipe-fixes.js','advisor.js','advisor-pro.js','advisor-fitness-v4.js','advisor-gym-pro-v5.js','advisor-hub-v6.js','recipes-26-50.js','recipes-live-fix.js','recipes-render-fix-v5.js','recipe-ux-v7.js','recipe-extras-v8.js','drinks-v1.js','style-pro-v1.js','fridge-v1.js','site-hub-v3.js','controls-v4.js']
           for name in names:
               s=re.sub(r'<script src="'+re.escape(name)+r'(?:\?v=[^"]*)?"></script>', '', s)
-          s=s.replace('</body>','<script src="recipes-26-50.js?v=6"></script><script src="recipe-fixes.js?v=8"></script><script src="recipes-render-fix-v5.js?v=6"></script><script src="recipe-ux-v7.js?v=1"></script><script src="recipe-extras-v8.js?v=1"></script><script src="drinks-v1.js?v=5"></script><script src="style-pro-v1.js?v=3"></script><script src="fridge-v1.js?v=2"></script></body>')
+          s=s.replace('</body>','<script src="recipes-26-50.js?v=6"></script><script src="recipe-fixes.js?v=8"></script><script src="recipes-render-fix-v5.js?v=6"></script><script src="recipe-ux-v7.js?v=1"></script><script src="recipe-extras-v8.js?v=1"></script><script src="drinks-v1.js?v=5"></script><script src="style-pro-v1.js?v=3"></script><script src="fridge-v1.js?v=2"></script><script src="controls-v4.js?v=1"></script><script src="site-hub-v3.js?v=1"></script></body>')
           p.write_text(s)
           PY
       - name: Commit
@@ -36,5 +38,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git diff --cached --quiet || git commit -m 'Włącz rozbudowaną Moją lodówkę v2'
+          git diff --cached --quiet || git commit -m 'Włącz nowe menu Stołownika i listy po 10'
           git push
