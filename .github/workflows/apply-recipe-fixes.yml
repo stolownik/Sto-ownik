@@ -41,7 +41,7 @@ jobs:
           @media(max-width:620px){.grid{grid-template-columns:1fr}.section-head h2{font-size:45px}}
           </style>'''
           s=s.replace('</head>',direct+'</head>')
-          s=s.replace('</body>','<script src="recipes-26-50.js?v=8"></script><script src="recipe-fixes.js?v=10"></script><script src="recipes-render-fix-v5.js?v=8"></script><script src="recipe-ux-v7.js?v=3"></script><script src="recipe-extras-v8.js?v=3"></script><script src="drinks-v1.js?v=8"></script><script src="style-pro-v1.js?v=7"></script><script src="controls-v4.js?v=3"></script><script src="site-hub-v3.js?v=8"></script><script src="autumn-decor-v5.js?v=3"></script><script src="cleanup-old-menu-v1.js?v=3"></script><script src="world-kitchen-v1.js?v=5"></script></body>')
+          s=s.replace('</body>','<script src="recipes-26-50.js?v=8"></script><script src="recipe-fixes.js?v=10"></script><script src="recipes-render-fix-v5.js?v=8"></script><script src="recipe-ux-v7.js?v=3"></script><script src="recipe-extras-v8.js?v=3"></script><script src="drinks-v1.js?v=9"></script><script src="style-pro-v1.js?v=7"></script><script src="controls-v4.js?v=3"></script><script src="site-hub-v3.js?v=8"></script><script src="autumn-decor-v5.js?v=3"></script><script src="cleanup-old-menu-v1.js?v=3"></script><script src="world-kitchen-v1.js?v=5"></script></body>')
           p.write_text(s)
           PY
       - name: Commit published index
@@ -49,5 +49,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git diff --cached --quiet || git commit -m 'Publikuj mobilna poprawke przepisow v7'
+          git diff --cached --quiet || git commit -m 'Publikuj przepisy napojow v9'
           git push
