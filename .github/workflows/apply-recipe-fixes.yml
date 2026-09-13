@@ -4,6 +4,7 @@ on:
     paths:
       - 'recipe-fixes.js'
       - 'advisor-pro.js'
+      - 'recipes-26-50.js'
       - '.github/workflows/apply-recipe-fixes.yml'
 permissions:
   contents: write
@@ -19,11 +20,10 @@ jobs:
           import re
           p=Path('index.html')
           s=p.read_text()
-          s=re.sub(r'<script src="recipe-fixes\.js(?:\?v=[^"]*)?"></script>', '<script src="recipe-fixes.js?v=8"></script>', s)
-          if 'recipe-fixes.js?v=8' not in s:
-              s=s.replace('</body>','<script src="recipe-fixes.js?v=8"></script></body>')
+          s=re.sub(r'<script src="recipe-fixes\.js(?:\?v=[^"]*)?"></script>', '', s)
           s=re.sub(r'<script src="advisor(?:-pro)?\.js(?:\?v=[^"]*)?"></script>', '', s)
-          s=s.replace('</body>','<script src="advisor-pro.js?v=3"></script></body>')
+          s=re.sub(r'<script src="recipes-26-50\.js(?:\?v=[^"]*)?"></script>', '', s)
+          s=s.replace('</body>','<script src="recipes-26-50.js?v=1"></script><script src="recipe-fixes.js?v=8"></script><script src="advisor-pro.js?v=3"></script></body>')
           p.write_text(s)
           PY
       - name: Commit
@@ -31,5 +31,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git diff --cached --quiet || git commit -m 'Włącz Doradcę Stołownika PRO v3'
+          git diff --cached --quiet || git commit -m 'Włącz 25 nowych przepisów'
           git push
