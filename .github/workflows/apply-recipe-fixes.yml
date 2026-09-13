@@ -18,9 +18,9 @@ jobs:
           import re
           p=Path('index.html')
           s=p.read_text()
-          s=re.sub(r'<script src="recipe-fixes\.js(?:\?v=[^"]*)?"></script>', '<script src="recipe-fixes.js?v=5"></script>', s)
-          if 'recipe-fixes.js?v=5' not in s:
-              s=s.replace('</body>','<script src="recipe-fixes.js?v=5"></script></body>')
+          s=re.sub(r'<script src="recipe-fixes\.js(?:\?v=[^"]*)?"></script>', '<script src="recipe-fixes.js?v=6"></script>', s)
+          if 'recipe-fixes.js?v=6' not in s:
+              s=s.replace('</body>','<script src="recipe-fixes.js?v=6"></script></body>')
           p.write_text(s)
           PY
       - name: Commit
@@ -28,5 +28,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git diff --cached --quiet || git commit -m 'Przywróć stary wygląd kategorii i odśwież poprawki'
+          git diff --cached --quiet || git commit -m 'Włącz przywrócone filtry v6'
           git push
