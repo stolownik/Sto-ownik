@@ -1,34 +1,10 @@
-// Stołownik — Danie dnia + kierunki dnia v2. Zmiana codziennie o 09:00 czasu polskiego.
+// Stołownik — Danie dnia v3. Jedno deterministycznie losowane danie na dobę, zmiana o 09:00 Europe/Warsaw.
 (function(){
-  function polishNowParts(){
-    const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Warsaw',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
-    const o={}; parts.forEach(p=>o[p.type]=p.value); return o;
-  }
-  function activeDayKey(){
-    const p=polishNowParts(); let d=new Date(Date.UTC(+p.year,+p.month-1,+p.day));
-    if(+p.hour<9)d.setUTCDate(d.getUTCDate()-1); return d.toISOString().slice(0,10);
-  }
-  function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
-  function chooseDish(){
-    if(typeof R==='undefined')return null;
-    const dishes=R.filter(r=>r&&r.img&&r.name&&!/koktajl|napój|lemoniada|kawa|herbata/i.test(r.name));
-    return dishes.length?dishes[hash('stolownik-dish-'+activeDayKey())%dishes.length]:null;
-  }
-  const countries=[
-    ['🇵🇱','Polska','Domowe klasyki, zupy i tradycyjne smaki'],['🇮🇹','Włochy','Makarony, risotto i śródziemnomorskie klasyki'],['🇲🇽','Meksyk','Tacos, salsa i wyraziste dodatki'],['🇮🇳','Indie','Aromatyczne curry, dal i bogactwo przypraw'],['🇯🇵','Japonia','Harmonia, ryż, makarony i umami'],['🇹🇭','Tajlandia','Ostre, kwaśne i słodkie smaki w równowadze'],['🇬🇷','Grecja','Oliwa, świeże zioła i warzywa'],['🇫🇷','Francja','Klasyka bistro, sosy i wypieki'],['🇪🇸','Hiszpania','Tapas, pomidory i słoneczne smaki'],['🇺🇸','USA','Comfort food i kultowe domowe klasyki']
-  ];
-  function chooseCountries(){
-    const pool=[...countries], out=[]; let seed=hash('stolownik-countries-'+activeDayKey());
-    while(out.length<4&&pool.length){seed=(Math.imul(seed,1664525)+1013904223)>>>0;out.push(pool.splice(seed%pool.length,1)[0])} return out;
-  }
-  function apply(){
-    const card=document.querySelector('#hubHome .featuredDish');
-    if(card){const dish=chooseDish();if(dish){const label=card.querySelector('.featuredLabel'),img=card.querySelector('img'),info=card.querySelector('.featuredInfo');if(label)label.textContent='DANIE DNIA';if(img){img.src=dish.img;img.alt=dish.name}if(info){const small=info.querySelector('span'),title=info.querySelector('h2'),desc=info.querySelector('p');if(small)small.textContent='Codziennie nowe · zmiana o 09:00';if(title)title.textContent=dish.name;if(desc)desc.textContent=(dish.time?dish.time+' min · ':'')+'dzisiejsza propozycja Stołownika'}}}
-    }
-    const cards=[...document.querySelectorAll('#hubHome .worldCard')], chosen=chooseCountries();
-    cards.slice(0,4).forEach((card,i)=>{const c=chosen[i];if(!c)return;const flag=card.querySelector(':scope > span'),box=card.querySelector('div'),name=box?.querySelector('b'),desc=box?.querySelector('p');if(flag)flag.textContent=c[0];if(name)name.textContent=c[1];if(desc)desc.textContent=c[2]});
-    const intro=document.querySelector('#hubHome .worldSection .sectionIntro p');if(intro)intro.textContent='Codziennie cztery inne kierunki kulinarnej podróży · zmiana o 09:00.';
-  }
-  function scheduleNine(){const p=polishNowParts(),now=(+p.hour)*60+(+p.minute);let wait=540-now;if(wait<=0)wait+=1440;setTimeout(()=>{apply();scheduleNine()},wait*60000+1500)}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{apply();scheduleNine()});else{apply();scheduleNine()}
+function parts(){const a=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Warsaw',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()),o={};a.forEach(p=>o[p.type]=p.value);return o}
+function key(){const p=parts(),d=new Date(Date.UTC(+p.year,+p.month-1,+p.day));if(+p.hour<9)d.setUTCDate(d.getUTCDate()-1);return d.toISOString().slice(0,10)}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function dish(){if(typeof R==='undefined')return null;const a=R.filter(r=>r&&r.id&&r.name&&r.img&&!/koktajl|napój|lemoniada|kawa|herbata/i.test(r.name));return a.length?a[hash('danie-dnia-'+key())%a.length]:null}
+function render(){if(typeof R==='undefined'||!document.querySelector('#hubHome'))return setTimeout(render,100);const d=dish();if(!d)return;let card=document.querySelector('#hubHome .featuredDish');if(!card){const hero=document.querySelector('#hubHome .restaurantHero');if(!hero)return;card=document.createElement('div');card.className='featuredDish';hero.appendChild(card)}card.innerHTML=`<div class="featuredLabel">DANIE DNIA · LOSOWANE O 09:00</div><img src="${d.img}" alt="${d.name}"><div class="featuredShade"></div><div class="featuredInfo"><span>DZISIEJSZY WYBÓR STOŁOWNIKA</span><h2>${d.name}</h2><p>${d.time||'—'} min · następne losowanie jutro o 09:00</p><button type="button" id="dailyOpen">Zobacz przepis →</button></div>`;card.querySelector('#dailyOpen').onclick=()=>{if(typeof openR==='function')openR(d.id);else window.stolownikPage&&window.stolownikPage('food')};card.dataset.dailyKey=key()}
+function schedule(){const p=parts(),now=+p.hour*60 + +p.minute;let wait=540-now;if(wait<=0)wait+=1440;setTimeout(()=>{render();schedule()},wait*60000+2500)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{render();schedule()});else{render();schedule()}
 })();
