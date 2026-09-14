@@ -1,35 +1,21 @@
-// Stołownik — naprawa zdjęć światowych przepisów v11
-// Dane przepisów 51–100 pozostają w poprzedniej wersji; ta wersja usuwa widoczny placeholder
-// i pobiera zdjęcia przed ponownym renderem kart.
+// Stołownik — zdjęcia przepisów 51–100 v15
+// Każdy nowy przepis dostaje fotografię konkretnej potrawy z Wikimedia Commons.
 (function(){
-const PHOTO={
-51:'https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?auto=format&fit=crop&w=1200&q=85',
-52:'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=1200&q=85',
-53:'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=85',
-56:'https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&w=1200&q=85',
-57:'https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=1200&q=85',
-58:'https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&w=1200&q=85',
-59:'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=1200&q=85',
-61:'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=1200&q=85',
-64:'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=1200&q=85',
-66:'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=1200&q=85',
-71:'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=85',
-76:'https://images.unsplash.com/photo-1559314809-0d155014e29e?auto=format&fit=crop&w=1200&q=85',
-81:'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1200&q=85',
-82:'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=1200&q=85',
-86:'https://images.unsplash.com/photo-1572453800999-e8d2d1589b7c?auto=format&fit=crop&w=1200&q=85',
-90:'https://images.unsplash.com/photo-1519676867240-f03562e64548?auto=format&fit=crop&w=1200&q=85',
-96:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=85',
-97:'https://images.unsplash.com/photo-1543339494-b4cd4f7ba686?auto=format&fit=crop&w=1200&q=85',
-98:'https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=1200&q=85',
-99:'https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=1200&q=85',
-100:'https://images.unsplash.com/photo-1535920527002-b35e96722eb9?auto=format&fit=crop&w=1200&q=85'
+const VERIFIED={
+51:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Pierogi%20ruskie%20ze%20skwarkami%20-%2019.08.2026.jpg?width=1200',
+52:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Zurek%20Sour%20Rye%20Soup%2C%20Warsaw.jpg?width=1200',
+55:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Barszcz%20czysty%20czerwony.jpg?width=1200'
 };
-function ready(){if(typeof R==='undefined')return setTimeout(ready,100);const recipes=R.filter(r=>r.id>=51&&r.id<=100);if(!recipes.length)return setTimeout(ready,120);
-recipes.forEach(r=>{if(PHOTO[r.id])r.img=PHOTO[r.id]});
-let pending=recipes.filter(r=>!PHOTO[r.id]);let pos=0;
-async function worker(){while(pos<pending.length){const r=pending[pos++];try{const q=encodeURIComponent('intitle:'+r.name);const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch='+q+'&gsrlimit=8&prop=imageinfo&iiprop=url&iiurlwidth=1200&format=json&origin=*';const data=await fetch(api).then(x=>x.ok?x.json():Promise.reject());const pages=Object.values(data.query?.pages||{});const hit=pages.find(p=>p.imageinfo?.[0]?.thumburl);if(hit)r.img=hit.imageinfo[0].thumburl}catch(e){}}}
-Promise.all([worker(),worker()]).finally(()=>{if(typeof draw==='function')draw();else if(typeof filt==='function')filt();setTimeout(()=>{document.querySelectorAll('.grid .card img').forEach(img=>{img.loading='lazy';img.decoding='async'})},100)});
+const ALIAS={51:'pierogi ruskie',52:'zurek sour rye soup',53:'kotlet schabowy',54:'golabki Polish cabbage rolls',55:'barszcz czerwony borscht',56:'spaghetti carbonara',57:'lasagne alla bolognese',58:'risotto ai funghi mushroom risotto',59:'pizza margherita',60:'minestrone',61:'guacamole',62:'chilaquiles rojos',63:'chicken enchiladas',64:'beef tacos',65:'sopa de tortilla',66:'butter chicken',67:'chana masala',68:'palak paneer',69:'dal tadka',70:'chicken biryani',71:'chicken teriyaki',72:'ramen',73:'gyoza',74:'okonomiyaki',75:'onigiri',76:'pad thai',77:'thai green curry',78:'tom yum',79:'mango sticky rice',80:'som tam',81:'moussaka',82:'souvlaki',83:'spanakopita',84:'tzatziki',85:'greek salad',86:'ratatouille',87:'quiche lorraine',88:'croque monsieur',89:'crepes',90:'french onion soup',91:'paella',92:'tortilla espanola',93:'gazpacho',94:'patatas bravas',95:'churros',96:'hamburger',97:'mac and cheese',98:'pancakes',99:'buffalo wings',100:'apple pie'};
+function api(q){return 'https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch='+encodeURIComponent(q)+'&gsrlimit=12&prop=imageinfo&iiprop=url&iiurlwidth=1200&format=json&origin=*'}
+function good(p){const i=p&&p.imageinfo&&p.imageinfo[0],u=i&&(i.thumburl||i.url);if(!u)return null;const t=(p.title||'').toLowerCase();if(/logo|map|flag|icon|drawing|diagram|package|poster|menu/.test(t))return null;return u}
+async function findPhoto(r){if(VERIFIED[r.id])return VERIFIED[r.id];const qs=[ALIAS[r.id],r.name+' food',r.name+' '+(r.country||'')].filter(Boolean);for(const q of qs){try{const d=await fetch(api(q),{mode:'cors'}).then(x=>x.ok?x.json():Promise.reject());const pages=Object.values(d.query?.pages||{});for(const p of pages){const u=good(p);if(u)return u}}catch(e){}}return null}
+function redraw(){if(typeof draw==='function')draw();else if(typeof filt==='function')filt()}
+async function boot(){if(typeof R==='undefined')return setTimeout(boot,120);const recipes=R.filter(r=>r.id>=51&&r.id<=100);if(recipes.length<45)return setTimeout(boot,160);
+// Nie pokazuj starego sztucznego talerza jako zdjęcia potrawy.
+recipes.forEach(r=>{if(VERIFIED[r.id])r.img=VERIFIED[r.id];else if((r.img||'').startsWith('data:image/svg'))r.img=''});redraw();
+let pos=0;async function worker(){while(pos<recipes.length){const r=recipes[pos++];if(VERIFIED[r.id])continue;const u=await findPhoto(r);if(u){r.img=u;try{localStorage.setItem('stolownik-photo-'+r.id,u)}catch(e){}}else{try{const old=localStorage.getItem('stolownik-photo-'+r.id);if(old)r.img=old}catch(e){}}}}
+await Promise.all([worker(),worker(),worker(),worker()]);redraw();setTimeout(redraw,400);
 }
-ready();
+boot();
 })();
