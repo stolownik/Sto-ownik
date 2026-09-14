@@ -30,16 +30,11 @@ jobs:
           p=Path('index.html')
           s=p.read_text()
           names=['recipe-fixes.js','advisor.js','advisor-pro.js','advisor-fitness-v4.js','advisor-gym-pro-v5.js','advisor-hub-v6.js','recipes-26-50.js','recipes-live-fix.js','recipes-render-fix-v5.js','recipe-ux-v7.js','recipe-extras-v8.js','drinks-v1.js','style-pro-v1.js','fridge-v1.js','site-hub-v3.js','controls-v4.js','autumn-decor-v5.js','cleanup-old-menu-v1.js','world-kitchen-v1.js']
-          for name in names:
-              s=re.sub(r'<script src="'+re.escape(name)+r'(?:\?v=[^"]*)?"></script>', '', s)
+          for name in names:s=re.sub(r'<script src="'+re.escape(name)+r'(?:\?v=[^"]*)?"></script>','',s)
           s=re.sub(r'<style id="directRestaurantV1">.*?</style>','',s,flags=re.S)
-          direct='''<style id="directRestaurantV1">
-          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Manrope:wght@400;500;600;700;800&display=swap');
-          :root{--cream:#f3e7d5;--ink:#2c201a;--muted:#786253;--red:#8b4028;--green:#304936;--line:#d6b995}
-          html{background:#241914}body{font-family:Manrope,system-ui,sans-serif;background:linear-gradient(180deg,#f6ecde,#e9d5bc);font-size:17px;color:#2c201a}h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif}
-          </style>'''
+          direct='''<style id="directRestaurantV1">@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Manrope:wght@400;500;600;700;800&display=swap');:root{--cream:#f3e7d5;--ink:#2c201a;--muted:#786253;--red:#8b4028;--green:#304936;--line:#d6b995}html{background:#241914}body{font-family:Manrope,system-ui,sans-serif;background:linear-gradient(180deg,#f6ecde,#e9d5bc);font-size:17px;color:#2c201a}h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif}</style>'''
           s=s.replace('</head>',direct+'</head>')
-          s=s.replace('</body>','<script src="recipes-26-50.js?v=8"></script><script src="recipe-fixes.js?v=10"></script><script src="recipes-render-fix-v5.js?v=8"></script><script src="recipe-ux-v7.js?v=3"></script><script src="recipe-extras-v8.js?v=3"></script><script src="drinks-v1.js?v=9"></script><script src="controls-v4.js?v=3"></script><script src="site-hub-v3.js?v=8"></script><script src="autumn-decor-v5.js?v=3"></script><script src="cleanup-old-menu-v1.js?v=3"></script><script src="world-kitchen-v1.js?v=6"></script><script src="style-pro-v1.js?v=8"></script></body>')
+          s=s.replace('</body>','<script src="recipes-26-50.js?v=8"></script><script src="recipe-fixes.js?v=10"></script><script src="recipes-render-fix-v5.js?v=8"></script><script src="recipe-ux-v7.js?v=3"></script><script src="recipe-extras-v8.js?v=3"></script><script src="drinks-v1.js?v=9"></script><script src="controls-v4.js?v=3"></script><script src="site-hub-v3.js?v=8"></script><script src="autumn-decor-v5.js?v=3"></script><script src="cleanup-old-menu-v1.js?v=3"></script><script src="world-kitchen-v1.js?v=7"></script><script src="style-pro-v1.js?v=8"></script></body>')
           p.write_text(s)
           PY
       - name: Commit published index
@@ -47,5 +42,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git diff --cached --quiet || git commit -m 'Publikuj kuchnie krajowe v6'
+          git diff --cached --quiet || git commit -m 'Publikuj filtr kuchni krajowych v7'
           git push
