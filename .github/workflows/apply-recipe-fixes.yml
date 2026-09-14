@@ -42,7 +42,7 @@ jobs:
           p=Path('index.html');s=p.read_text()
           names=['recipe-fixes.js','advisor.js','advisor-pro.js','advisor-fitness-v4.js','advisor-gym-pro-v5.js','advisor-hub-v6.js','recipes-26-50.js','world-recipes-data-v10.js','world-recipes-v10.js','menu-v12.js','recipes-live-fix-v5.js','recipes-render-fix-v5.js','recipe-ux-v7.js','recipe-extras-v8.js','drinks-v1.js','drinks-extra-v10.js','style-pro-v1.js','fridge-v1.js','site-hub-v3.js','daily-dish-v1.js','world-showcase-v16.js','polish-ui-v20.js','catalog-sections-v22.js','catalog-mirror-v29.js','controls-v4.js','autumn-decor-v5.js','cleanup-old-menu-v1.js','world-kitchen-v1.js','legal-v1.js']
           for name in names:s=re.sub(r'<script src="'+re.escape(name)+r'(?:\?v=[^"]*)?"></script>','',s)
-          scripts='<script src="recipes-26-50.js?v=8"></script><script src="world-recipes-data-v10.js?v=17"></script><script src="world-recipes-v10.js?v=17"></script><script src="recipe-fixes.js?v=14"></script><script src="recipes-render-fix-v5.js?v=8"></script><script src="recipe-ux-v7.js?v=3"></script><script src="recipe-extras-v8.js?v=3"></script><script src="drinks-v1.js?v=9"></script><script src="drinks-extra-v10.js?v=11"></script><script src="controls-v4.js?v=3"></script><script src="site-hub-v3.js?v=14"></script><script src="daily-dish-v1.js?v=3"></script><script src="world-showcase-v16.js?v=2"></script><script src="menu-v12.js?v=14"></script><script src="autumn-decor-v5.js?v=3"></script><script src="cleanup-old-menu-v1.js?v=3"></script><script src="world-kitchen-v1.js?v=15"></script><script src="catalog-sections-v22.js?v=1"></script><script src="catalog-mirror-v29.js?v=33"></script><script src="style-pro-v1.js?v=8"></script><script src="polish-ui-v20.js?v=1"></script><script src="legal-v1.js?v=1"></script>'
+          scripts='<script src="recipes-26-50.js?v=8"></script><script src="world-recipes-data-v10.js?v=17"></script><script src="world-recipes-v10.js?v=17"></script><script src="recipe-fixes.js?v=14"></script><script src="recipes-render-fix-v5.js?v=8"></script><script src="recipe-ux-v7.js?v=3"></script><script src="recipe-extras-v8.js?v=3"></script><script src="drinks-v1.js?v=9"></script><script src="drinks-extra-v10.js?v=11"></script><script src="controls-v4.js?v=3"></script><script src="site-hub-v3.js?v=14"></script><script src="daily-dish-v1.js?v=3"></script><script src="world-showcase-v16.js?v=2"></script><script src="menu-v12.js?v=14"></script><script src="autumn-decor-v5.js?v=3"></script><script src="cleanup-old-menu-v1.js?v=3"></script><script src="world-kitchen-v1.js?v=16"></script><script src="catalog-sections-v22.js?v=1"></script><script src="catalog-mirror-v29.js?v=33"></script><script src="style-pro-v1.js?v=8"></script><script src="polish-ui-v20.js?v=1"></script><script src="legal-v1.js?v=1"></script>'
           s=s.replace('</body>',scripts+'</body>')
           p.write_text(s)
           PY
@@ -51,17 +51,17 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           s=Path('index.html').read_text()
-          required=['recipe-fixes.js?v=14','site-hub-v3.js?v=14','world-kitchen-v1.js?v=15','catalog-sections-v22.js?v=1','catalog-mirror-v29.js?v=33']
+          required=['recipe-fixes.js?v=14','site-hub-v3.js?v=14','world-kitchen-v1.js?v=16','catalog-sections-v22.js?v=1','catalog-mirror-v29.js?v=33']
           missing=[x for x in required if x not in s]
           if missing: raise SystemExit('Missing scripts: '+', '.join(missing))
           for x in ['world-kitchen-v1.js','recipe-fixes.js','catalog-mirror-v29.js']:
             if s.count(x)!=1: raise SystemExit('Duplicate '+x)
-          print('Stołownik filters v33: OK')
+          print('Stołownik combined filters v34: OK')
           PY
       - name: Commit published site
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html world-recipes-data-v10.js
-          git diff --cached --quiet || git commit -m 'Publikuj rozwiniete filtry v33'
+          git diff --cached --quiet || git commit -m 'Publikuj wspolne filtrowanie v34'
           git push
