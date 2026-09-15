@@ -1,0 +1,2 @@
+// Stołownik v53 — usuwa zakładkę O nas z nawigacji i kafli
+(function(){'use strict';function clean(){document.querySelectorAll('[data-go="story"]').forEach(x=>x.remove());document.getElementById('hubStory')?.remove()}function boot(){clean();new MutationObserver(clean).observe(document.body,{childList:true,subtree:true});setTimeout(clean,300)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();})();
