@@ -1,73 +1,36 @@
-name: Apply recipe fixes
+name: Stołownik World quality
 on:
   push:
     paths:
-      - 'recipe-fixes.js'
-      - 'recipes-26-50.js'
-      - 'world-recipes-v10.js'
-      - 'menu-v12.js'
-      - 'recipes-render-fix-v5.js'
-      - 'recipe-ux-v7.js'
-      - 'recipe-extras-v8.js'
-      - 'drinks-v1.js'
-      - 'drinks-extra-v10.js'
-      - 'style-pro-v1.js'
-      - 'site-hub-v3.js'
-      - 'daily-dish-v1.js'
-      - 'world-showcase-v16.js'
-      - 'polish-ui-v20.js'
-      - 'catalog-sections-v22.js'
-      - 'catalog-mirror-v29.js'
-      - 'catalog-sync-v38.js'
-      - 'compat-audit-v47.js'
-      - 'catalog-nutrition-v48.js'
-      - 'remove-about-v53.js'
-      - 'controls-v4.js'
-      - 'autumn-decor-v5.js'
-      - 'cleanup-old-menu-v1.js'
-      - 'world-kitchen-v1.js'
-      - 'legal-v1.js'
-      - 'ux-general-v61.js'
+      - 'index.html'
+      - 'stolownik-world.css'
+      - 'stolownik-world.js'
       - '.github/workflows/apply-recipe-fixes.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'stolownik-world.css'
+      - 'stolownik-world.js'
 permissions:
-  contents: write
+  contents: read
 jobs:
-  patch:
+  quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Restore recipe data 51-100
+      - name: JavaScript syntax
+        run: node --check stolownik-world.js
+      - name: Architecture invariants
         run: |
-          curl -fsSL 'https://raw.githubusercontent.com/stolownik/Sto-ownik/380c896a3d7cca3002f40dcc8543644f29d15f72/world-recipes-v10.js' -o world-recipes-data-v10.js
-      - name: Build published index
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-          p=Path('index.html');s=p.read_text()
-          names=['recipe-fixes.js','advisor.js','advisor-pro.js','advisor-fitness-v4.js','advisor-gym-pro-v5.js','advisor-hub-v6.js','recipes-26-50.js','world-recipes-data-v10.js','world-recipes-v10.js','menu-v12.js','recipes-live-fix-v5.js','recipes-render-fix-v5.js','recipe-ux-v7.js','recipe-extras-v8.js','drinks-v1.js','drinks-extra-v10.js','style-pro-v1.js','fridge-v1.js','site-hub-v3.js','daily-dish-v1.js','world-showcase-v16.js','polish-ui-v20.js','catalog-sections-v22.js','catalog-mirror-v29.js','catalog-sync-v38.js','compat-audit-v47.js','catalog-nutrition-v48.js','remove-about-v53.js','controls-v4.js','autumn-decor-v5.js','cleanup-old-menu-v1.js','world-kitchen-v1.js','legal-v1.js','ux-general-v61.js']
-          for name in names:s=re.sub(r'<script src="'+re.escape(name)+r'(?:\?v=[^"]*)?\"></script>','',s)
-          scripts='<script src="recipes-26-50.js?v=8"></script><script src="world-recipes-data-v10.js?v=17"></script><script src="world-recipes-v10.js?v=17"></script><script src="recipe-fixes.js?v=14"></script><script src="recipes-render-fix-v5.js?v=8"></script><script src="recipe-ux-v7.js?v=3"></script><script src="recipe-extras-v8.js?v=3"></script><script src="drinks-v1.js?v=9"></script><script src="drinks-extra-v10.js?v=11"></script><script src="controls-v4.js?v=3"></script><script src="site-hub-v3.js?v=14"></script><script src="daily-dish-v1.js?v=3"></script><script src="world-showcase-v16.js?v=2"></script><script src="menu-v12.js?v=15"></script><script src="autumn-decor-v5.js?v=3"></script><script src="cleanup-old-menu-v1.js?v=3"></script><script src="world-kitchen-v1.js?v=17"></script><script src="catalog-sections-v22.js?v=23"></script><script src="catalog-mirror-v29.js?v=37"></script><script src="catalog-sync-v38.js?v=63"></script><script src="style-pro-v1.js?v=8"></script><script src="polish-ui-v20.js?v=1"></script><script src="compat-audit-v47.js?v=47"></script><script src="catalog-nutrition-v48.js?v=52"></script><script src="remove-about-v53.js?v=53"></script><script src="legal-v1.js?v=1"></script><script src="ux-general-v61.js?v=61"></script>'
-          s=s.replace('</body>',scripts+'</body>')
-          p.write_text(s)
-          PY
-      - name: Compatibility tests
-        run: |
-          node --check recipe-fixes.js
-          node --check catalog-sync-v38.js
-          node --check catalog-nutrition-v48.js
-          node --check remove-about-v53.js
-          node --check ux-general-v61.js
-          grep -q 'catalog-sync-v38.js?v=63' index.html
-          grep -q 'realCatalogV63' catalog-sync-v38.js
-          grep -q 'cloneFoodFilters' catalog-sync-v38.js
-          grep -q 'const NF=' catalog-sync-v38.js
-          grep -q 'const DF=' catalog-sync-v38.js
-          echo 'v63: Desery i Napoje korzystaja ze wzorca filtrow Dan'
-      - name: Commit published site
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html world-recipes-data-v10.js
-          git diff --cached --quiet || git commit -m 'Publikuj filtry skopiowane z Dan v63'
-          git push
+          grep -q 'stolownik-world.css?v=1' index.html
+          grep -q 'stolownik-world.js?v=1' index.html
+          grep -q 'G-ZDFQ37XBFQ' index.html
+          grep -q 'https://stolownik.github.io/Sto-ownik/' index.html
+          ! grep -q 'catalog-mirror-v29.js' index.html
+          ! grep -q 'catalog-sync-v38.js' index.html
+          ! grep -q 'ux-general-v61.js' index.html
+          grep -q 'data-type="Dania"' index.html
+          grep -q 'data-type="Desery"' index.html
+          grep -q 'data-type="Napoje"' index.html
+          grep -q 'id="authModal"' index.html
+          echo 'Stołownik World: podstawowe testy przeszły.'
