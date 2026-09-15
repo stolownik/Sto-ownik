@@ -1,16 +1,9 @@
 name: Stołownik World quality
 on:
   push:
-    paths:
-      - 'index.html'
-      - 'stolownik-world.css'
-      - 'stolownik-world.js'
-      - '.github/workflows/apply-recipe-fixes.yml'
+    paths: ['index.html','stolownik-world.css','stolownik-world.js','.github/workflows/apply-recipe-fixes.yml']
   pull_request:
-    paths:
-      - 'index.html'
-      - 'stolownik-world.css'
-      - 'stolownik-world.js'
+    paths: ['index.html','stolownik-world.css','stolownik-world.js']
 permissions:
   contents: read
 jobs:
@@ -23,7 +16,7 @@ jobs:
       - name: Architecture invariants
         run: |
           grep -q 'stolownik-world.css?v=1' index.html
-          grep -q 'stolownik-world.js?v=1' index.html
+          grep -q 'stolownik-world.js?v=2' index.html
           grep -q 'G-ZDFQ37XBFQ' index.html
           grep -q 'https://stolownik.github.io/Sto-ownik/' index.html
           ! grep -q 'catalog-mirror-v29.js' index.html
@@ -33,4 +26,8 @@ jobs:
           grep -q 'data-type="Desery"' index.html
           grep -q 'data-type="Napoje"' index.html
           grep -q 'id="authModal"' index.html
-          echo 'Stołownik World: podstawowe testy przeszły.'
+          grep -q 'stolownik:pantry' stolownik-world.js
+          grep -q 'stolownik:saved' stolownik-world.js
+          grep -q 'function pantry' stolownik-world.js
+          grep -q 'function planner' stolownik-world.js
+          echo 'Stołownik World v2: testy architektury przeszły.'
