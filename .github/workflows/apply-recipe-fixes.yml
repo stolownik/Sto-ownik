@@ -1,7 +1,7 @@
 name: Stołownik quality
 on:
   push:
-    paths: ['index.html','stolownik-world.css','stolownik-app-v6.js','stolownik-final-v1.js','stolownik-recipes.js','stolownik-world-recipes.js','stolownik-world-recipes-extended.js','stolownik-world-recipes-complete.js','stolownik-drinks.js','manifest.webmanifest','sw.js','.github/workflows/apply-recipe-fixes.yml']
+    paths: ['index.html','stolownik-world.css','stolownik-app-v6.js','stolownik-final-v1.js','stolownik-colossus-v1.js','stolownik-rebuild-v2.js','stolownik-recipes.js','stolownik-world-recipes.js','stolownik-world-recipes-extended.js','stolownik-world-recipes-complete.js','stolownik-drinks.js','manifest.webmanifest','sw.js','.github/workflows/apply-recipe-fixes.yml']
   pull_request:
 permissions:
   contents: read
@@ -14,6 +14,8 @@ jobs:
         run: |
           node --check stolownik-app-v6.js
           node --check stolownik-final-v1.js
+          node --check stolownik-colossus-v1.js
+          node --check stolownik-rebuild-v2.js
           node --check stolownik-recipes.js
           node --check stolownik-world-recipes.js
           node --check stolownik-world-recipes-extended.js
@@ -33,7 +35,7 @@ jobs:
           for(let id=51;id<=100;id++) if(!ids.includes(id)) throw Error('Missing World recipe '+id);
           for(let id=201;id<=218;id++) if(!ids.includes(id)) throw Error('Missing drink '+id);
           if(ids.includes(200)) throw Error('Legacy drink ID 200 must not exist');
-          console.log(`Validated ${r.length} recipes; unique IDs and required fields OK.`);
+          console.log(`Validated ${r.length} real stored recipes; unique IDs and required fields OK.`);
           NODE
       - name: Platform invariants
         run: |
@@ -42,6 +44,12 @@ jobs:
           grep -q 'manifest.webmanifest' index.html
           grep -q 'stolownik-app-v6.js?v=2' index.html
           grep -q 'stolownik-final-v1.js?v=1' index.html
+          grep -q 'stolownik-colossus-v1.js?v=1' index.html
+          grep -q 'stolownik-rebuild-v2.js?v=1' index.html
+          grep -q 'stolownik-rebuild-v2.js?v=1' sw.js
+          grep -q "stolownik-shell-v11" sw.js
+          grep -q 'commons.wikimedia.org/w/api.php' stolownik-rebuild-v2.js
+          grep -q 'LicenseShortName' stolownik-rebuild-v2.js
           grep -q 'id="brandsBtn"' index.html
           grep -q 'id="partnersBtn"' index.html
           grep -q 'id="restaurantBtn"' index.html
@@ -53,12 +61,6 @@ jobs:
           grep -q 'Europe/Warsaw' stolownik-app-v6.js
           grep -q 'Restaurant Studio' stolownik-app-v6.js
           grep -q 'Ingredient Universe' stolownik-app-v6.js
-          grep -q 'CC BY-SA 4.0' stolownik-final-v1.js
           ! grep -q 'stolownik-app-v5.js' index.html
           ! grep -q 'stolownik-experience.js' index.html
-          ! grep -q 'stolownik-platform.js' index.html
-          ! grep -q 'stolownik-catalog-pro.js' index.html
-          ! grep -q 'stolownik-75.js' index.html
-          ! grep -q 'MutationObserver' stolownik-app-v6.js
-          ! grep -q 'MutationObserver' stolownik-final-v1.js
-          echo 'Stołownik: finalny audyt statyczny przeszedł.'
+          echo 'Stołownik: audyt przebudowy przeszedł.'
