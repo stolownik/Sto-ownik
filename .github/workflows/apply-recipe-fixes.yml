@@ -1,7 +1,7 @@
 name: Stołownik quality
 on:
   push:
-    paths: ['index.html','stolownik-world.css','stolownik-app-v5.js','stolownik-experience.js','stolownik-platform.js','stolownik-recipes.js','stolownik-world-recipes.js','stolownik-drinks.js','manifest.webmanifest','sw.js','.github/workflows/apply-recipe-fixes.yml']
+    paths: ['index.html','stolownik-world.css','stolownik-app-v5.js','stolownik-experience.js','stolownik-platform.js','stolownik-recipes.js','stolownik-world-recipes.js','stolownik-world-recipes-extended.js','stolownik-drinks.js','manifest.webmanifest','sw.js','.github/workflows/apply-recipe-fixes.yml']
   pull_request:
 permissions:
   contents: read
@@ -17,6 +17,7 @@ jobs:
           node --check stolownik-platform.js
           node --check stolownik-recipes.js
           node --check stolownik-world-recipes.js
+          node --check stolownik-world-recipes-extended.js
           node --check stolownik-drinks.js
           node --check sw.js
       - name: Platform invariants
@@ -24,7 +25,9 @@ jobs:
           grep -q 'G-ZDFQ37XBFQ' index.html
           grep -q 'https://stolownik.github.io/Sto-ownik/' index.html
           grep -q 'manifest.webmanifest' index.html
-          grep -q 'stolownik-platform.js?v=1' index.html
+          grep -q 'stolownik-world-recipes-extended.js?v=1' index.html
+          grep -q "add(52,'Żurek" stolownik-world-recipes-extended.js
+          grep -q "add(73,'Yakisoba" stolownik-world-recipes-extended.js
           grep -q 'data-type="Dania"' index.html
           grep -q 'data-type="Desery"' index.html
           grep -q 'data-type="Napoje"' index.html
